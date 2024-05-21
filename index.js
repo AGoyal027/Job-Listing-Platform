@@ -9,6 +9,9 @@ const logStream = fs.createWriteStream(path.join(__dirname, "log.txt"), {
     flag: 'a'
 });
 
+const authRoutes = require('./routes/auth')
+const jobRoutes = require('./routes/job')
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -20,6 +23,9 @@ app.use((req, res, next) => {
     logStream.write(log + "\n");
     next();
 })
+
+app.use('/api/auth', authRoutes);
+app.use('/api/job', jobRoutes);
 
 app.get('/', (req, res) => {
     res.send('Hello World').status(200);
