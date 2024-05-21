@@ -9,6 +9,10 @@ const logStream = fs.createWriteStream(path.join(__dirname, "log.txt"), {
     flag: 'a'
 });
 
+const errorStream = fs.createWriteStream(path.join(__dirname, "error.txt"), {
+    flag: 'a'
+});
+
 const authRoutes = require('./routes/auth')
 const jobRoutes = require('./routes/job')
 
@@ -29,6 +33,14 @@ app.use('/api/job', jobRoutes);
 
 app.get('/', (req, res) => {
     res.send('Hello World').status(200);
+})
+
+app.use((req, res, next) => {
+    const now = new Date();
+    const time = now.toLocaleTimeString();
+    const error = `${req.method} ${req.originalUrl} ${time}`;
+    errorStream.write(error + "\n");
+    res.status(404).send('Route not found')
 })
 
 app.listen(3000, () => {
