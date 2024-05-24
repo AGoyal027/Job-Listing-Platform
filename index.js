@@ -1,7 +1,10 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const bodyParser = require('body-parser')
+const dotenv = require('dotenv');
 const fs = require('fs');
 const path = require('path');
+dotenv.config();
 
 const app = express();
 
@@ -43,6 +46,11 @@ app.use((req, res, next) => {
     res.status(404).send('Route not found')
 })
 
-app.listen(3000, () => {
+mongoose
+    .connect(process.env.MONGODB_URL)
+    .then(() => console.log("Db connected"))
+    .catch((err) => console.log(err));
+
+app.listen(process.env.PORT, () => {
     console.log('Server is up :)');
 })
