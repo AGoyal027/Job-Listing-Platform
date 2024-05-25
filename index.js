@@ -21,8 +21,7 @@ const jobRoutes = require('./routes/job')
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+
 app.use((req, res, next) => {
     const now = new Date();
     const time = `${now.toLocaleTimeString()}`;
@@ -36,6 +35,14 @@ app.use('/api/job', jobRoutes);
 
 app.get('/', (req, res) => {
     res.send('Hello World').status(200);
+})
+
+app.use((err, req, res, next) => {
+    const now = new Date();
+    const time = now.toLocaleTimeString();
+    const error = `${req.method} ${req.originalUrl} ${time}`;
+    errorStream.write(error + err.stack + "\n");
+    res.status(500).send('Internal Server Error')
 })
 
 app.use((req, res, next) => {
