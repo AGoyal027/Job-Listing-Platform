@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const userSchema = Schema({
+const userSchema = new Schema({
     name:{
         type: String,
         required: true,
@@ -16,7 +16,7 @@ const userSchema = Schema({
         required: true,
     },
     mobile: {
-        typr: String,
+        type: String,
         required: true,
         unique: true,
     }
