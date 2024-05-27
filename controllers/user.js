@@ -27,32 +27,49 @@ const registerUser = async (req, res, next) => {
 };
 
 const loginUser = async (req, res, next) => {
-    try{
+    try {
         const { email, password } = req.body;
-    if (!email || !password) {
-        return res.status(400).send('Please fill all the fields');
-    }
-    const user = await User.findOne({ email });
-    if (!user) {
-        return res.status(400).send('Invalid email or password');
-    }
-    const isPasswordvalid = await bcrypt.compare(password, user.password);
-    if (!isPasswordvalid) {
-        return res.status(400).send('Invalid email or password');
-    }
-    const token = jwt.sign({userId: user._id}, 'secret', {
-        expiresIn: '240h'
-    });
-    res.json({
-        token,
-        userId: user._id,
-        name: user.name,
-        email: user.email,
-        mobile: user.mobile,
-    });
-    } catch(err){
+        if (!email || !password) {
+            return res.status(400).send('Please fill all the fields');
+        }
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).send('Invalid email or password');
+        }
+        const isPasswordvalid = await bcrypt.compare(password, user.password);
+        if (!isPasswordvalid) {
+            return res.status(400).send('Invalid email or password');
+        }
+        const token = jwt.sign({ userId: user._id }, 'secret', {
+            expiresIn: '240h'
+        });
+        res.status(200).json({
+            token,
+            userId: user._id,
+            name: user.name,
+            email: user.email,
+            mobile: user.mobile,
+        });
+    } catch (err) {
         next(err);
     }
 }
 
-module.exports = { registerUser, loginUser };
+const allUsers = async (req, res, next) => {
+    try {
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return res.status(400).send('Please fill all the fields');
+        }
+        if (email === 'admin@backend.com' && password === 'admin') {
+            const users = await User.find();
+            res.status(200).json(users);
+        } else {
+            return res.status(400).send('Invalid email or password');
+        }
+    } catch (err) {
+        next(err);
+    }
+}
+
+module.exports = { registerUser, loginUser, allUsers };
