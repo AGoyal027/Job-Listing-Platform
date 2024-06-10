@@ -28,4 +28,15 @@ const createJob = async (req, res, next) => {
     }
 };
 
-module.exports = { createJob };
+const getAllJobs = async (req, res, next) => {
+    try {
+        const jobs = await Job.find()
+        .select(['title', 'companyName', 'location', 'skills'])
+        .sort({createdAt: -1});
+        res.status(200).send(jobs);
+    } catch (err) {
+        next(err);
+    }
+};
+
+module.exports = { createJob, getAllJobs };
