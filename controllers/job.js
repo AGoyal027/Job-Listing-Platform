@@ -31,12 +31,25 @@ const createJob = async (req, res, next) => {
 const getAllJobs = async (req, res, next) => {
     try {
         const jobs = await Job.find()
-        .select(['title', 'companyName', 'location', 'skills'])
-        .sort({createdAt: -1});
+            .select(['title', 'companyName', 'location', 'skills'])
+            .sort({ createdAt: -1 });
         res.status(200).send(jobs);
     } catch (err) {
         next(err);
     }
 };
 
-module.exports = { createJob, getAllJobs };
+const getJobById = async (req, res, next) => {
+    try {
+        const { jobnumber } = req.params
+        const job = await Job.findById(jobnumber);
+        if (!job) {
+            return res.status(404).send('Job not found');
+        }
+        res.status(200).send(job);
+    } catch (err) {
+        next(err);
+    }
+};
+
+module.exports = { createJob, getAllJobs, getJobById };

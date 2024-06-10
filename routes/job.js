@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createJob, getAllJobs } = require('../controllers/job')
+const { createJob, getAllJobs, getJobById } = require('../controllers/job')
 const { verifyAuth } = require('../middleware/verifyAuth');
 
 router.get('/', (req, res) => {
@@ -10,5 +10,7 @@ router.get('/', (req, res) => {
 router.post('/create', verifyAuth, createJob);
 
 router.get('/all', getAllJobs);
+
+router.get('/view/:jobnumber', getJobById);
 
 module.exports = router;
